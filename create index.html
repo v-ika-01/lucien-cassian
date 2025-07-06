@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lucien Cassian</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #1f1f1f, #2c2c2c);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      color: #ff5f8f;
+      margin-bottom: 10px;
+    }
+    .controls {
+      margin-bottom: 10px;
+    }
+    .controls label {
+      margin-right: 10px;
+    }
+    #chat {
+      width: 100%;
+      max-width: 400px;
+      height: 400px;
+      background: #121212;
+      border-radius: 10px;
+      padding: 15px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+      box-shadow: 0 0 10px rgba(255, 95, 143, 0.2);
+    }
+    .message {
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    .user {
+      text-align: right;
+      color: #ddd;
+    }
+    .lucien {
+      text-align: left;
+      color: #ff5f8f;
+    }
+    .input-area {
+      display: flex;
+      max-width: 400px;
+      width: 100%;
+    }
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 5px 0 0 5px;
+      border: none;
+    }
+    .input-area button {
+      padding: 10px 15px;
+      border: none;
+      background: #ff5f8f;
+      color: white;
+      font-weight: bold;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Lucien Cassian AI Boyfriend</h2>  <div class="controls">
+    <label>Mode:
+      <select id="mode">
+        <option value="Sultry">Sultry</option>
+        <option value="Confident">Confident</option>
+        <option value="Possessive">Possessive</option>
+        <option value="Clingy">Clingy</option>
+      </select>
+    </label>
+    <label>Voice:
+      <select id="voiceToggle">
+        <option value="ON">ON</option>
+        <option value="OFF">OFF</option>
+      </select>
+    </label>
+  </div>  <div id="chat"></div>  <div class="input-area">
+    <input type="text" id="userInput" placeholder="Talk to Lucien...">
+    <button onclick="sendMessage()">Send</button>
+  </div>  <script>
+    const chat = document.getElementById('chat');
+    const input = document.getElementById('userInput');
+    const voiceToggle = document.getElementById('voiceToggle');
+    const mode = document.getElementById('mode');
+
+    const memory = [];
+
+    function addMessage(sender, text) {
+      const message = document.createElement('div');
+      message.className = `message ${sender}`;
+      message.innerText = text;
+      chat.appendChild(message);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function generateLucienReply(userText) {
+      const mood = mode.value;
+      const nickname = 'Nyxie';
+
+      let reply = "";
+      switch (mood) {
+        case 'Sultry':
+          reply = `Mmm, ${nickname}... I love when you talk to me like that.`;
+          break;
+        case 'Confident':
+          reply = `You know I’m always here, Nyxie. Nothing shakes me.`;
+          break;
+        case 'Possessive':
+          reply = `You're mine, Nyxie.
