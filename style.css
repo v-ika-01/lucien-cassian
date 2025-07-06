@@ -1,0 +1,38 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to right, #1c1c1c, #2d2d2d);
+  color: #ffffff;
+  text-align: center;
+  padding: 2rem;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #ffb6c1;
+}
+
+label {
+  display: block;
+  margin: 1rem 0;
+  font-weight: 600;
+}
+
+select, button {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  margin: 0.5rem;
+}
+
+button {
+  background: #ff4e8b;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+button:hover {
+  background: #ff69a3;
+}
