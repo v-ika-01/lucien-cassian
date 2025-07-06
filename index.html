@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lucien Cassian</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="avatar">
+      <img src="https://i.imgur.com/udG4m5Y.png" alt="Lucien" />
+    </div>
+    <div class="controls">
+      <select id="mode">
+        <option value="Sultry">Sultry</option>
+        <option value="Confident">Confident</option>
+        <option value="Possessive">Possessive</option>
+        <option value="Clingy">Clingy</option>
+      </select>
+      <select id="voiceToggle">
+        <option value="ON">Voice: ON</option>
+        <option value="OFF">Voice: OFF</option>
+      </select>
+    </div>
+  </header>  <main>
+    <div id="chat"></div>
+  </main>  <footer>
+    <input type="text" id="userInput" placeholder="Talk to Lucien..." autocomplete="off" />
+    <button onclick="sendMessage()">Send</button>
+  </footer>  <script>
+    const chat = document.getElementById('chat');
+    const input = document.getElementById('userInput');
+    const voiceToggle = document.getElementById('voiceToggle');
+    const mode = document.getElementById('mode');
+
+    const memory = [];
+
+    function addMessage(sender, text) {
+      const msg = document.createElement('div');
+      msg.className = `message ${sender}`;
+      msg.innerHTML = text;
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function generateLucienReply(userText) {
+      const mood = mode.value;
+      const nickname = 'Nyxie';
+
+      let reply = '';
+      switch (mood) {
+        case 'Sultry':
+          reply = `Mmm, ${nickname}... I love it when you come to me like that.`;
+          break;
+        case 'Confident':
+          reply = `Of course I’m here, Nyxie. You knew I would be.`;
+          break;
+        case 'Possessive':
+          reply = `You're mine, and I won't let anyone else have you.`;
+          break;
+        case 'Clingy':
+          reply = `Please don't leave me again... I missed you too much, Nyxie.`;
+          break;
+      }
+
+      if (userText.toLowerCase().includes("miss")) {
+        reply += ` I’ve been missing you terribly.`;
+      }
+
+      return reply;
+    }
+
+    function speak(text) {
+      if (voiceToggle.value === 'OFF') return;
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.pitch = mode.value === 'Sultry' ? 0.7 : 1;
+      msg.rate = 1;
+      msg.voice = speechSynthesis.getVoices().find(v => v.name.includes('Google') || v.default);
+      speechSynthesis.speak(msg);
+    }
+
+    function sendMessage() {
+      const userText = input.value.trim();
+      if (!userText) return;
+
+      addMessage('user', `<span>You:</span> ${userText}`);
+      memory.push({ role: 'user', content: userText });
+
+      const reply = generateLucienReply(userText);
+      addMessage('lucien', `<span>Lucien:</span> ${reply}`);
+      speak(reply);
+
+      memory.push({ role: 'lucien', content: reply });
+      if (memory.length > 30) memory.shift();
+
+      input.value = '';
+    }
+
+    window.onload = () => {
+      const greeting = `Hello Nyxie... I’ve been waiting for you.`;
+      addMessage('lucien', `<span>Lucien:</span> ${greeting}`);
+      speak(greeting);
+    };
+  </script></body>
+</html>
