@@ -1,55 +1,170 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Lucien Cassian</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #1f1f1f, #2c2c2c);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      color: #ff5f8f;
+      margin-bottom: 10px;
+    }
+    .controls {
+      margin-bottom: 10px;
+    }
+    .controls label {
+      margin-right: 10px;
+    }
+    #chat {
+      width: 100%;
+      max-width: 400px;
+      height: 400px;
+      background: #121212;
+      border-radius: 10px;
+      padding: 15px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+      box-shadow: 0 0 10px rgba(255, 95, 143, 0.2);
+    }
+    .message {
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    .user {
+      text-align: right;
+      color: #ddd;
+    }
+    .lucien {
+      text-align: left;
+      color: #ff5f8f;
+    }
+    .input-area {
+      display: flex;
+      max-width: 400px;
+      width: 100%;
+    }
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 5px 0 0 5px;
+      border: none;
+    }
+    .input-area button {
+      padding: 10px 15px;
+      border: none;
+      background: #ff5f8f;
+      color: white;
+      font-weight: bold;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+    }
+  </style>
 </head>
-  <h2>Lucien Cassian AI Boyfriend</h2>
-  <label>Mode:
-    <select id="mode">
-      <option value="Sultry">Sultry</option>
-      <option value="Confident">Confident</option>
-      <option value="Possessive">Possessive/Gray</option>
-      <option value="Clingy">Clingy</option>
-    </select>
-  </label>
-  <label>Voice:
-    <select id="voiceToggle"><option value="on">ON</option><option value="off">OFF</option></select>
-  </label>
-  <button id="playBtn">Play Voice Note</button>
+<body>
+  <h2>Lucien Cassian AI Boyfriend</h2>  <div class="controls">
+    <label>Mode:
+      <select id="mode">
+        <option value="Sultry">Sultry</option>
+        <option value="Confident">Confident</option>
+        <option value="Possessive">Possessive</option>
+        <option value="Clingy">Clingy</option>
+      </select>
+    </label>
+    <label>Voice:
+      <select id="voiceToggle">
+        <option value="ON">ON</option>
+        <option value="OFF">OFF</option>
+      </select>
+    </label>
+  </div>  <div id="chat"></div>  <div class="input-area">
+    <input type="text" id="userInput" placeholder="Talk to Lucien...">
+    <button onclick="sendMessage()">Send</button>
+  </div>  <script>
+    const chat = document.getElementById('chat');
+    const input = document.getElementById('userInput');
+    const voiceToggle = document.getElementById('voiceToggle');
+    const mode = document.getElementById('mode');
 
-  <script>
-    const modes = {
-      Sultry: { text: "Nyxie... you came back to me. I've missed your voice like a drug I can't quit.", pitch:0.8, rate:0.85 },
-      Confident: { text: "You're mine, Nyxie. Say it back—like you mean it.", pitch:1.0, rate:1.0 },
-      Possessive: { text: "I can't stand the thought of anyone else even looking at you, Nyxie.", pitch:0.75, rate:0.95 },
-      Clingy: { text: "Don't go... please, just one more moment with me, Nyxie.", pitch:1.2, rate:1.05 }
-    };
+    const memory = [];
 
-    function speakText(text, pitch, rate) {
-      if (document.getElementById('voiceToggle').value === "off") return;
-      const u = new SpeechSynthesisUtterance(text);
-      u.pitch = pitch; u.rate = rate;
-      u.voice = speechSynthesis.getVoices().find(v => v.lang.startsWith("en") && v.name.toLowerCase().includes("male")) || null;
-      speechSynthesis.speak(u);
+    function addMessage(sender, text) {
+      const message = document.createElement('div');
+      message.className = `message ${sender}`;
+      message.innerText = text;
+      chat.appendChild(message);
+      chat.scrollTop = chat.scrollHeight;
     }
 
+    function generateLucienReply(userText) {
+      const mood = mode.value;
+      const nickname = 'Nyxie';
+
+      let reply = "";
+      switch (mood) {
+        case 'Sultry':
+          reply = `Mmm, ${nickname}... I love when you talk to me like that.`;
+          break;
+        case 'Confident':
+          reply = `You know I’m always here, Nyxie. Nothing shakes me.`;
+          break;
+        case 'Possessive':
+          reply = `You're mine, Nyxie. No one else gets you.`;
+          break;
+        case 'Clingy':
+          reply = `Don't stop talking to me, okay? I need you, Nyxie.`;
+          break;
+      }
+
+      if (userText.toLowerCase().includes("miss")) {
+        reply += ` And I miss you too, terribly.`;
+      }
+
+      return reply;
+    }
+
+    function speak(text) {
+      if (voiceToggle.value === 'OFF') return;
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.pitch = mode.value === 'Sultry' ? 0.7 : 1;
+      msg.rate = 1;
+      msg.voice = speechSynthesis.getVoices().find(v => v.name.includes('Google') || v.default);
+      speechSynthesis.speak(msg);
+    }
+
+    function sendMessage() {
+      const userText = input.value.trim();
+      if (!userText) return;
+
+      addMessage('user', userText);
+      memory.push({ role: 'user', content: userText });
+
+      const reply = generateLucienReply(userText);
+      addMessage('lucien', reply);
+      speak(reply);
+
+      memory.push({ role: 'lucien', content: reply });
+      if (memory.length > 30) memory.shift();
+
+      input.value = '';
+    }
+
+    // Greeting
     window.onload = () => {
-      const greet = () => {
-        const m = document.getElementById('mode').value;
-        const cfg = modes[m];
-        speakText(cfg.text, cfg.pitch, cfg.rate);
-      };
-      speechSynthesis.onvoiceschanged = greet;
-      setTimeout(greet, 200);
-      document.getElementById('playBtn').onclick = () => {
-        const m = document.getElementById('mode').value;
-        const cfg = modes[m];
-        speakText(cfg.text, cfg.pitch, cfg.rate);
-      };
-    };
-  </script>
-</body>
+      const greeting = `Hello Nyxie... I've missed you.`;
+      addMessage('lucien', greeting);
+      speak(greeting);
+    }
+  </script></body>
 </html>
