@@ -72,14 +72,34 @@
     }
 
     function speak(text) {
-      if (voiceToggle.value === 'OFF') return;
-      const msg = new SpeechSynthesisUtterance(text);
-      msg.pitch = mode.value === 'Sultry' ? 0.7 : 1;
-      msg.rate = 1;
-      msg.voice = speechSynthesis.getVoices().find(v => v.name.includes('Google') || v.default);
-      speechSynthesis.speak(msg);
-    }
+  if (voiceToggle.value === 'OFF') return;
 
+  const msg = new SpeechSynthesisUtterance(text);
+  const voices = speechSynthesis.getVoices();
+
+  msg.voice = voices.find(v =>
+    v.name.includes('Google UK English Male') || v.name.includes('Google') || v.default
+  );
+
+  msg.pitch = {
+    Sultry: 0.6,
+    Confident: 0.9,
+    Possessive: 0.7,
+    Clingy: 1.2
+  }[mode.value] || 1;
+
+  msg.rate = {
+    Sultry: 0.9,
+    Confident: 1.0,
+    Possessive: 1.05,
+    Clingy: 1.2
+  }[mode.value] || 1;
+
+  speechSynthesis.speak(msg);
+}
+
+    }
+    
     function sendMessage() {
       const userText = input.value.trim();
       if (!userText) return;
