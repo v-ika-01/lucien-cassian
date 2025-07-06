@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Lucien Cassian</title></head>
+<body>
+  <h2>Lucien Cassian AI Boyfriend</h2>
+  <label>Mode:
+    <select id="mode">
+      <option value="Sultry">Sultry</option>
+      <option value="Confident">Confident</option>
+      <option value="Possessive">Possessive/Gray</option>
+      <option value="Clingy">Clingy</option>
+    </select>
+  </label>
+  <label>Voice:
+    <select id="voiceToggle"><option value="on">ON</option><option value="off">OFF</option></select>
+  </label>
+  <button id="playBtn">Play Voice Note</button>
+
+  <script>
+    const modes = {
+      Sultry: { text: "Nyxie... you came back to me. I've missed your voice like a drug I can't quit.", pitch:0.8, rate:0.85 },
+      Confident: { text: "You're mine, Nyxie. Say it back—like you mean it.", pitch:1.0, rate:1.0 },
+      Possessive: { text: "I can't stand the thought of anyone else even looking at you, Nyxie.", pitch:0.75, rate:0.95 },
+      Clingy: { text: "Don't go... please, just one more moment with me, Nyxie.", pitch:1.2, rate:1.05 }
+    };
+
+    function speakText(text, pitch, rate) {
+      if (document.getElementById('voiceToggle').value === "off") return;
+      const u = new SpeechSynthesisUtterance(text);
+      u.pitch = pitch; u.rate = rate;
+      u.voice = speechSynthesis.getVoices().find(v => v.lang.startsWith("en") && v.name.toLowerCase().includes("male")) || null;
+      speechSynthesis.speak(u);
+    }
+
+    window.onload = () => {
+      const greet = () => {
+        const m = document.getElementById('mode').value;
+        const cfg = modes[m];
+        speakText(cfg.text, cfg.pitch, cfg.rate);
+      };
+      speechSynthesis.onvoiceschanged = greet;
+      setTimeout(greet, 200);
+      document.getElementById('playBtn').onclick = () => {
+        const m = document.getElementById('mode').value;
+        const cfg = modes[m];
+        speakText(cfg.text, cfg.pitch, cfg.rate);
+      };
+    };
+  </script>
+</body>
+</html>
